@@ -87,8 +87,8 @@ void buildShape() {
     geo.quadstrip(v1, v2);
   }
   
-  geo.triangleFan(lists.get(lists.size() - 1));
   geo.triangleFan(lists.get(0));
+  geo.triangleFan(lists.get(lists.size() - 1));
   
   println(lists.get(0));
   println(lists.get(1));
