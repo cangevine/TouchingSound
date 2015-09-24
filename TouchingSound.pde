@@ -22,7 +22,8 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(255);
+  fill(0, 0, 255);
   translate(width/2, height/2);
 
   //float ry=map(width/2-mouseX, -width/2, width/2, PI, -PI);
@@ -31,11 +32,12 @@ void draw() {
   rotateX(rx);
   
   geo.draw();
-}
-void keyPressed() {
-  if (key == 'r') {
-    for(int i = 0; i < in.bufferSize() - 1; i++){
-      recordings.add(in.left.get(i));
+  
+  if (keyPressed) {
+    if (key == 'r') {
+      for(int i = 0; i < in.bufferSize() - 1; i++){
+        recordings.add(in.left.get(i));
+      }
     }
   }
 }
@@ -45,6 +47,7 @@ void keyReleased() {
     datapoints = new ArrayList<Float>();
   }
   if (key == 'd') {
+    println(recordings.size()+" datapoints in the recording");
     ArrayList<Float> samples = new ArrayList<Float>();
     for (int i = 0; i < recordings.size(); i += 10) {
       samples.add(recordings.get(i));
@@ -59,6 +62,7 @@ void keyReleased() {
       float avg = sum / averageSize;
       datapoints.add(avg);
     }
+    println(datapoints.size()+" datapoints in the shape");
     buildShape();
   }
   if (key == 's') {
@@ -73,7 +77,10 @@ void buildShape() {
   // For each datapoint, generate a vertex list of a circle with
   //    a radius that uses that datapoint as a radius
   //    and add each list to an array
-  float spacing = (height-100)/datapoints.size();
+  int spacing = (height-100)/datapoints.size();
+  if (spacing == 0) {
+    spacing = 1;
+  }
   for (int i = 0; i < datapoints.size(); i++) {
     UVertexList newList = generateCircleVerticesWithRadius(datapoints.get(i));
     newList.translate(0, i*spacing, 0);
@@ -90,12 +97,8 @@ void buildShape() {
   geo.triangleFan(lists.get(0));
   geo.triangleFan(lists.get(lists.size() - 1));
   
-  println(lists.get(0));
-  println(lists.get(1));
-  
   geo.center();
   println("Shape complete!");
-  //geo.center().scale(0.5);
 }
 
 UVertexList generateCircleVerticesWithRadius(float rad) {
